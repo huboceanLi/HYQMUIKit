@@ -1,0 +1,6 @@
+framework module QMUIKit {
+  umbrella header "HYQMUIKit-umbrella.h"
+
+  export *
+  module * { export * }
+}

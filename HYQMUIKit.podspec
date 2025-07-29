@@ -8,8 +8,8 @@
 
 Pod::Spec.new do |s|
   s.name             = 'HYQMUIKit'
-  s.version          = '0.1.0'
-  s.summary          = 'A short description of HYQMUIKit.'
+  s.version          = '0.0.1'
+  s.summary          = 'QMUIKit does not update, solve the crash.'
 
 # This description is used to generate tags and improve search results.
 #   * Think: What does it do? Why did you write it? What is the focus?
@@ -18,25 +18,18 @@ Pod::Spec.new do |s|
 #   * Finally, don't worry about the indent, CocoaPods strips it!
 
   s.description      = <<-DESC
-TODO: Add long description of the pod here.
+QMUIKit does not update, solve the crash
                        DESC
 
-  s.homepage         = 'https://github.com/li437277219@gmail.com/HYQMUIKit'
+  s.homepage         = 'https://github.com/huboceanLi/HYQMUIKit'
   # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
   s.author           = { 'li437277219@gmail.com' => 'li437277219@gmail.com' }
-  s.source           = { :git => 'https://github.com/li437277219@gmail.com/HYQMUIKit.git', :tag => s.version.to_s }
+  s.source           = { :git => 'https://github.com/huboceanLi/HYQMUIKit.git', :tag => s.version.to_s }
   # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
-
-  s.ios.deployment_target = '10.0'
-
+  s.module_name = "QMUIKit"
+  s.ios.deployment_target = '13.0'
+  s.requires_arc = true
+  s.swift_version = '5.0'
   s.source_files = 'HYQMUIKit/Classes/**/*'
-  
-  # s.resource_bundles = {
-  #   'HYQMUIKit' => ['HYQMUIKit/Assets/*.png']
-  # }
-
-  # s.public_header_files = 'Pod/Classes/**/*.h'
-  # s.frameworks = 'UIKit', 'MapKit'
-  # s.dependency 'AFNetworking', '~> 2.3'
 end

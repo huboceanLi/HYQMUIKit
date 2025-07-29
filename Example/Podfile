@@ -1,6 +1,13 @@
 use_frameworks!
-target 'HYQMUIKit_Tests' do
+
+platform :ios, '10.0'
+
+target 'HYQMUIKit_Example' do
   pod 'HYQMUIKit', :path => '../'
-  
-  
+
+  target 'HYQMUIKit_Tests' do
+    inherit! :search_paths
+
+    
+  end
 end
