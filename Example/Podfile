@@ -1,0 +1,6 @@
+use_frameworks!
+target 'HYQMUIKit_Tests' do
+  pod 'HYQMUIKit', :path => '../'
+  
+  
+end
