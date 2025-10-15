@@ -201,7 +201,7 @@ static BOOL QMUIAvoidSubstring = NO;
     // - (void) handleKeyWithString:(id)arg1 forKeyEvent:(id)arg2 executionContext:(id)arg3;
     Class clz = nil;
     if (@available(iOS 18.0, *)) {
-        clz = NSClassFromString([NSString qmui_stringByConcat:@"_", @"UIKeyboard", @"StateManager", nil]);
+        clz = NSClassFromString([NSString qmui_stringByConcat:@"_", @"UI", @"Keyboard", @"StateManager", nil]);
     } else {
         clz = NSClassFromString([NSString qmui_stringByConcat:@"UIKeyb", @"oard", @"Impl", nil]);
     }
@@ -218,6 +218,28 @@ static BOOL QMUIAvoidSubstring = NO;
             QMUIAvoidSubstring = NO;
         };
     });
+    
+    // +[EMFStringUtilities _tokenizedMultiPersonFromString:]
+    // + (id) _tokenizedMultiPersonFromString:(id)arg1; (0x1ae7b3ce0)
+    Class emfClz = NSClassFromString([NSString qmui_stringByConcat:@"EMF", @"String", @"Utilities", nil]);
+    SEL emfSelector = NSSelectorFromString([NSString qmui_stringByConcat:@"_", @"tokenized", @"MultiPerson", @"FromString:", nil]);
+    if (emfClz && [emfClz respondsToSelector:emfSelector]) {
+        OverrideImplementation(object_getClass(emfClz), emfSelector, ^id(__unsafe_unretained Class originClass, SEL originCMD, IMP (^originalIMPProvider)(void)) {
+            return ^id(NSObject *selfObject, id firstArgv) {
+                
+                QMUIAvoidSubstring = YES;
+                
+                // call super
+                id (*originSelectorIMP)(id, SEL, id);
+                originSelectorIMP = (id (*)(id, SEL, id))originalIMPProvider();
+                id result = originSelectorIMP(selfObject, originCMD, firstArgv);
+                
+                QMUIAvoidSubstring = NO;
+                
+                return result;
+            };
+        });
+    }
 }
 
 + (void)qmuisafety_NSRegularExpression {
@@ -294,7 +316,7 @@ static BOOL QMUIAvoidSubstring = NO;
             
             // 保护从 emoji 等 ComposedCharacterSequence 中间裁剪的场景
             {
-                if (index < selfObject.length) {
+                if (index < selfObject.length && !QMUIAvoidSubstring) {
                     NSRange range = [selfObject rangeOfComposedCharacterSequenceAtIndex:index];
                     BOOL isValidatedIndex = range.location == index;
                     if (!isValidatedIndex) {
