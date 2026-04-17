@@ -286,7 +286,7 @@ static BOOL QMUIAvoidSubstring = NO;
                     BOOL isValidatedIndex = range.location == index || NSMaxRange(range) == index;
                     if (!isValidatedIndex) {
                         NSString *logString = [NSString stringWithFormat:@"试图在 ComposedCharacterSequence 中间用 %@ 裁剪字符串，可能导致乱码、crash。原字符串为“%@”(%@)，index 为 %@，命中的 ComposedCharacterSequence range 为 %@", NSStringFromSelector(originCMD), selfObject, @(selfObject.length), @(index), NSStringFromRange(range)];
-                        QMUIAssert(NO, @"QMUIStringSafety", @"%@", logString);
+                        QMUILogWarn(@"QMUIStringSafety", @"%@", logString);
                         index = range.location;
                     }
                 }
@@ -321,7 +321,7 @@ static BOOL QMUIAvoidSubstring = NO;
                     BOOL isValidatedIndex = range.location == index;
                     if (!isValidatedIndex) {
                         NSString *logString = [NSString stringWithFormat:@"试图在 ComposedCharacterSequence 中间用 %@ 裁剪字符串，可能导致乱码、crash。原字符串为“%@”(%@)，index 为 %@，命中的 ComposedCharacterSequence range 为 %@", NSStringFromSelector(originCMD), selfObject, @(selfObject.length), @(index), NSStringFromRange(range)];
-                        QMUIAssert(NO, @"QMUIStringSafety", @"%@", logString);
+                        QMUILogWarn(@"QMUIStringSafety", @"%@", logString);
                         index = range.location;
                     }
                 }
@@ -368,7 +368,7 @@ static BOOL QMUIAvoidSubstring = NO;
                     BOOL isValidddatedRange = range.length == 0 || NSEqualRanges(range, range2);
                     if (!isValidddatedRange && !QMUIAvoidSubstring) {
                         NSString *logString = [NSString stringWithFormat:@"试图在 ComposedCharacterSequence 中间用 %@ 裁剪字符串，可能导致乱码、crash。原字符串为“%@”(%@)，range 为 %@，命中的 ComposedCharacterSequence range 为 %@", NSStringFromSelector(originCMD), selfObject, @(selfObject.length), NSStringFromRange(range), NSStringFromRange(range2)];
-                        QMUIAssert(NO, @"QMUIStringSafety", @"%@", logString);
+                        QMUILogWarn(@"QMUIStringSafety", @"%@", logString);
                         range = range2;
                     }
                 }
