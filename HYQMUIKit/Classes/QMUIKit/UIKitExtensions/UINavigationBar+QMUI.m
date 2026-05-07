@@ -19,6 +19,7 @@
 #import "UIView+QMUI.h"
 #import "NSArray+QMUI.h"
 #import "UINavigationItem+QMUI.h"
+#import <objc/message.h>
 
 NSString *const kShouldFixTitleViewBugKey = @"kShouldFixTitleViewBugKey";
 
@@ -359,7 +360,29 @@ NSString *const kShouldFixTitleViewBugKey = @"kShouldFixTitleViewBugKey";
 }
 
 - (UIView *)qmui_contentView {
-    return [self valueForKeyPath:@"visualProvider.contentView"];
+    // iOS 26.4.2 上 visualProvider 可能不是 KVC-compliant，直接 valueForKeyPath 会触发崩溃。
+    // 优先通过 selector 安全访问，再回退到子视图查找，避免依赖 KVC 私有 key。
+    UIView *contentView = nil;
+    id visualProvider = nil;
+    SEL visualProviderSEL = NSSelectorFromString(@"visualProvider");
+    if ([self respondsToSelector:visualProviderSEL]) {
+        visualProvider = ((id (*)(id, SEL))objc_msgSend)(self, visualProviderSEL);
+    }
+    SEL contentViewSEL = NSSelectorFromString(@"contentView");
+    if (visualProvider && [visualProvider respondsToSelector:contentViewSEL]) {
+        contentView = ((id (*)(id, SEL))objc_msgSend)(visualProvider, contentViewSEL);
+    }
+    if ([contentView isKindOfClass:UIView.class]) {
+        return contentView;
+    }
+    
+    Class contentViewClass = NSClassFromString([NSString qmui_stringByConcat:@"_", @"UINavigationBar", @"ContentView", nil]);
+    for (UIView *subview in self.subviews) {
+        if ([subview isKindOfClass:contentViewClass]) {
+            return subview;
+        }
+    }
+    return nil;
 }
 
 - (void)qmuinb_fixTitleViewLayoutInIOS16 {
