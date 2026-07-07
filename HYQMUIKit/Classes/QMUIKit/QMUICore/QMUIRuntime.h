@@ -132,12 +132,23 @@ OverrideImplementation(Class targetClass, SEL targetSelector, id (^implementatio
         return result;
     };
     
+    IMP newImp = imp_implementationWithBlock(implementationBlock(targetClass, targetSelector, originalIMPProvider));
+
     if (hasOverride) {
-        method_setImplementation(originMethod, imp_implementationWithBlock(implementationBlock(targetClass, targetSelector, originalIMPProvider)));
+        const char *typeEncoding = method_getTypeEncoding(originMethod) ?: [targetClass instanceMethodSignatureForSelector:targetSelector].qmui_typeEncoding;
+        // iOS 26 上 method_setImplementation(Method, IMP) 会进入 class unknown 的全局 cache flush 路径。
+        // 这里已知 targetClass，优先用 class_replaceMethod 让 runtime 缩小需要失效的缓存范围。
+        class_replaceMethod(targetClass, targetSelector, newImp, typeEncoding);
     } else {
         const char *typeEncoding = method_getTypeEncoding(originMethod) ?: [targetClass instanceMethodSignatureForSelector:targetSelector].qmui_typeEncoding;
-        class_addMethod(targetClass, targetSelector, imp_implementationWithBlock(implementationBlock(targetClass, targetSelector, originalIMPProvider)), typeEncoding);
+        class_addMethod(targetClass, targetSelector, newImp, typeEncoding);
     }
+//    if (hasOverride) {
+//        method_setImplementation(originMethod, imp_implementationWithBlock(implementationBlock(targetClass, targetSelector, originalIMPProvider)));
+//    } else {
+//        const char *typeEncoding = method_getTypeEncoding(originMethod) ?: [targetClass instanceMethodSignatureForSelector:targetSelector].qmui_typeEncoding;
+//        class_addMethod(targetClass, targetSelector, imp_implementationWithBlock(implementationBlock(targetClass, targetSelector, originalIMPProvider)), typeEncoding);
+//    }
     
     return YES;
 }
