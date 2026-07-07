@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'HYQMUIKit'
-  s.version          = '0.0.6'
+  s.version          = '0.0.5'
   s.summary          = 'QMUIKit does not update, solve the crash.'
 
 # This description is used to generate tags and improve search results.
@@ -34,6 +34,7 @@ QMUIKit does not update, solve the crash
   s.source_files = 'HYQMUIKit/Classes/**/*'
   s.exclude_files = [
     'HYQMUIKit/Classes/QMUIKit/QMUIComponents/QMUIConsole/**',
+    'HYQMUIKit/Classes/QMUIKit/QMUIComponents/QMUILog/**',
     'HYQMUIKit/Classes/QMUIKit/QMUIComponents/ImagePickerLibrary/**',
     'HYQMUIKit/Classes/QMUIKit/QMUIComponents/AssetLibrary/**',
     'HYQMUIKit/Classes/QMUIKit/QMUIComponents/QMUIImagePreviewView/**',
@@ -42,6 +43,7 @@ QMUIKit does not update, solve the crash
     'HYQMUIKit/Classes/QMUIKit/QMUIComponents/QMUIScrollAnimator/**',
     'HYQMUIKit/Classes/QMUIKit/QMUIComponents/QMUILayouter/**',
     'HYQMUIKit/Classes/QMUIKit/QMUIComponents/QMUIAnimation/**',
+    'HYQMUIKit/Classes/QMUIKit/QMUIComponents/QMUIMultipleDelegates/**',
     'HYQMUIKit/Classes/QMUIKit/QMUIComponents/QMUICellHeightKeyCache/**',
     'HYQMUIKit/Classes/QMUIKit/QMUIComponents/QMUICellSizeKeyCache/**',
     'HYQMUIKit/Classes/QMUIKit/QMUIComponents/StaticTableView/**',
@@ -49,8 +51,6 @@ QMUIKit does not update, solve the crash
     'HYQMUIKit/Classes/QMUIKit/QMUIComponents/QMUISearchController.*',
     'HYQMUIKit/Classes/QMUIKit/QMUIComponents/QMUIWindowSizeMonitor.*',
     'HYQMUIKit/Classes/QMUIKit/QMUIComponents/QMUIEmotionView.*',
-    'HYQMUIKit/Classes/QMUIKit/QMUIComponents/QMUILogManagerViewController.*',
-    'HYQMUIKit/Classes/QMUIKit/QMUIComponents/QMUILogger+QMUIConfigurationTemplate.*',
     'HYQMUIKit/Classes/QMUIKit/QMUIMainFrame/**',
 
     # 第二轮深度裁剪：按 +load / runtime hook 热点继续排除。
