@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'HYQMUIKit'
-  s.version          = '0.0.4'
+  s.version          = '0.0.7'
   s.summary          = 'QMUIKit does not update, solve the crash.'
 
 # This description is used to generate tags and improve search results.
