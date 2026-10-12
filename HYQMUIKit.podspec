@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'HYQMUIKit'
-  s.version          = '0.0.9'
+  s.version          = '0.0.10'
   s.summary          = 'QMUIKit does not update, solve the crash.'
 
 # This description is used to generate tags and improve search results.
@@ -28,7 +28,7 @@ QMUIKit does not update, solve the crash
   s.source           = { :git => 'https://github.com/huboceanLi/HYQMUIKit.git', :tag => s.version.to_s }
   # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
   s.module_name = "QMUIKit"
-  s.ios.deployment_target = '13.0'
+  s.ios.deployment_target = '15.0'
   s.requires_arc = true
   s.swift_version = '5.0'
   s.source_files = 'HYQMUIKit/Classes/**/*'

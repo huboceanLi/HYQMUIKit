@@ -1,0 +1,50 @@
+diff --git a/HYQMUIKit/Classes/QMUIKit/UIKitExtensions/UIViewController+QMUI.m b/HYQMUIKit/Classes/QMUIKit/UIKitExtensions/UIViewController+QMUI.m
+--- a/HYQMUIKit/Classes/QMUIKit/UIKitExtensions/UIViewController+QMUI.m
++++ b/HYQMUIKit/Classes/QMUIKit/UIKitExtensions/UIViewController+QMUI.m
+@@ -24,6 +24,18 @@
+ NSNotificationName const QMUIAppSizeWillChangeNotification = @"QMUIAppSizeWillChangeNotification";
+ NSString *const QMUIPrecedingAppSizeUserInfoKey = @"QMUIPrecedingAppSizeUserInfoKey";
+ NSString *const QMUIFollowingAppSizeUserInfoKey = @"QMUIFollowingAppSizeUserInfoKey";
++
++/// 仅横跨内容中线且位于页面下半部的横向 TabBar 产生底部占位，侧栏交由 UIKit 布局。
++/// 两个矩形必须位于同一坐标系；使用原始栏矩形判断方向，避免裁剪后误判。
++static BOOL QMUIIsHorizontalBottomTabBar(CGRect viewFrame, CGRect barFrame) {
++    return CGRectIsValidated(viewFrame)
++        && CGRectIsValidated(barFrame)
++        && CGRectGetWidth(barFrame) > CGRectGetHeight(barFrame)
++        && CGRectIntersectsRect(viewFrame, barFrame)
++        && CGRectGetMinX(barFrame) <= CGRectGetMidX(viewFrame)
++        && CGRectGetMaxX(barFrame) >= CGRectGetMidX(viewFrame)
++        && CGRectGetMidY(barFrame) >= CGRectGetMidY(viewFrame);
++}
+ 
+ @implementation UIViewController (QMUI)
+ 
+@@ -112,8 +124,11 @@
+ 
+                         // pop 转场动画过程中有些时候 tabBar 尚未被加到 view 层级树里，所以这里做个判断，避免出现 convertRect 警告
+                         CGRect barRectInTabBarController = tabBar.window ? [tabBar convertRect:tabBar.bounds toView:tabBarController.view] : tabBar.frame;
+-                        CGFloat correctInsetBottom = MAX(CGRectGetMaxY(viewRectInTabBarController) - CGRectGetMinY(barRectInTabBarController), 0);
+-                        insets.bottom = correctInsetBottom;
++                        // 竖栏顶边可能为零，不能据此把整页高度写入 bottom inset。
++                        if (QMUIIsHorizontalBottomTabBar(viewRectInTabBarController, barRectInTabBarController)) {
++                            CGFloat correctInsetBottom = MAX(CGRectGetMaxY(viewRectInTabBarController) - CGRectGetMinY(barRectInTabBarController), 0);
++                            insets.bottom = correctInsetBottom;
++                        }
+                     }
+ 
+                     // call super
+@@ -425,10 +440,11 @@
+         return 0;
+     }
+     
+-    CGRect tabBarFrame = CGRectIntersection(self.view.bounds, [self.view convertRect:self.tabBarController.tabBar.frame fromView:self.tabBarController.tabBar.superview]);
++    CGRect barFrameInView = [self.view convertRect:self.tabBarController.tabBar.frame fromView:self.tabBarController.tabBar.superview];
++    CGRect tabBarFrame = CGRectIntersection(self.view.bounds, barFrameInView);
+     
+     // 两个 rect 如果不存在交集，CGRectIntersection 计算结果可能为非法的 rect，所以这里做个保护
+-    if (!CGRectIsValidated(tabBarFrame)) {
++    if (!CGRectIsValidated(tabBarFrame) || !QMUIIsHorizontalBottomTabBar(self.view.bounds, barFrameInView)) {
+         return 0;
+     }
+     
